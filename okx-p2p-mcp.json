@@ -1,0 +1,700 @@
+{
+  "name": "okx-p2p-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for OKX P2P trading API - connects to https://www.okx.com/api/v5/p2p/ endpoints",
+  "servers": [
+    {
+      "name": "okx-p2p-server",
+      "url": "https://www.okx.com/api/v5/p2p/",
+      "auth": {
+        "type": "api_key",
+        "parameters": {
+          "api_key": "YOUR_API_KEY",
+          "secret": "YOUR_API_SECRET",
+          "passphrase": "YOUR_PASSPHRASE"
+        }
+      },
+      "tools": [
+        {
+          "name": "get_ad",
+          "description": "Get advertisement details by ID",
+          "endpoint": "GET /api/v5/p2p/ad",
+          "parameters": {
+            "ad_id": "string",
+            "query": {
+              "adId": "string",
+              "pageSize": "number"
+            }
+          },
+          "required": ["adId"]
+        },
+        {
+          "name": "create_ad",
+          "description": "Create a new P2P advertisement",
+          "endpoint": "POST /api/v5/p2p/ad/create",
+          "parameters": {
+            "body": {
+              "cryptoCurrency": "string",
+              "fiatCurrency": "string",
+              "side": "buy|sell",
+              "amount": "string",
+              "price": "string",
+              "minOrderLimit": "string",
+              "maxOrderLimit": "string",
+              "paymentMethodIds": ["string"],
+              "message": "string",
+              "isPublic": "boolean"
+            }
+          },
+          "required": ["cryptoCurrency", "fiatCurrency", "side", "amount", "price", "minOrderLimit", "maxOrderLimit", "paymentMethodIds", "message"]
+        },
+        {
+          "name": "create_order",
+          "description": "Create a new P2P order",
+          "endpoint": "POST /api/v5/p2p/order/create",
+          "parameters": {
+            "body": {
+              "adId": "string",
+              "side": "buy|sell",
+              "amount": "string",
+              "price": "string"
+            }
+          },
+          "required": ["adId", "side", "amount", "price"]
+        },
+        {
+          "name": "mark_as_paid",
+          "description": "Mark order as paid by buyer",
+          "endpoint": "POST /api/v5/p2p/order/mark-as-paid",
+          "parameters": {
+            "body": {
+              "orderId": "string",
+              "paymentTime": "string"
+            }
+          },
+          "required": ["orderId", "paymentTime"]
+        },
+        {
+          "name": "release_crypto",
+          "description": "Release cryptocurrency to buyer after payment confirmation",
+          "endpoint": "POST /api/v5/p2p/order/release-crypto",
+          "parameters": {
+            "body": {
+              "orderId": "string"
+            }
+          },
+          "required": ["orderId"]
+        },
+        {
+          "name": "send_chat_message",
+          "description": "Send message to counterparty",
+          "endpoint": "POST /api/v5/p2p/chat/send-message",
+          "parameters": {
+            "body": {
+              "orderId": "string",
+              "content": "string",
+              "contentType": "number",
+              "contentUrl": "string"
+            }
+          },
+          "required": ["orderId", "content", "contentType"]
+        },
+        {
+          "name": "get_order",
+          "description": "Get order details",
+          "endpoint": "GET /api/v5/p2p/order",
+          "parameters": {
+            "query": {
+              "orderId": "string",
+              "pageSize": "number"
+            }
+          },
+          "required": ["orderId"]
+        },
+        {
+          "name": "get_order_history",
+          "description": "Get order list for user",
+          "endpoint": "GET /api/v5/p2p/order/list",
+          "parameters": {
+            "query": {
+              "pageSize": "number",
+              "pageNum": "number",
+              "state": "string"
+            }
+          }
+        },
+        {
+          "name": "get_user_info",
+          "description": "Get user basic information",
+          "endpoint": "GET /api/v5/p2p/user/basic-info",
+          "parameters": {
+            "query": {
+              "userId": "string"
+            }
+          },
+          "required": ["userId"]
+        },
+        {
+          "name": "get_user_id",
+          "description": "Get user ID information",
+          "endpoint": "GET /api/v5/p2p/user/id",
+          "parameters": {
+            "query": {}
+          }
+        },
+        {
+          "name": "get_blacklist_users",
+          "description": "Get user's blacklist",
+          "endpoint": "GET /api/v5/p2p/user/blacklist-users",
+          "parameters": {
+            "query": {
+              "pageSize": "number",
+              "pageNum": "number"
+            }
+          }
+        },
+        {
+          "name": "add_user_to_blacklist",
+          "description": "Add user to blacklist",
+          "endpoint": "POST /api/v5/p2p/user/add-user-to-blacklist",
+          "parameters": {
+            "body": {
+              "userId": "string",
+              "reason": "string"
+            }
+          },
+          "required": ["userId", "reason"]
+        },
+        {
+          "name": "remove_user_from_blacklist",
+          "description": "Remove user from blacklist",
+          "endpoint": "POST /api/v5/p2p/user/remove-user-from-blacklist",
+          "parameters": {
+            "body": {
+              "userId": "string"
+            }
+          },
+          "required": ["userId"]
+        },
+        {
+          "name": "get_user_statistics",
+          "description": "Get user trading statistics",
+          "endpoint": "GET /api/v5/p2p/user/statistics",
+          "parameters": {
+            "query": {
+              "period": "string"
+            }
+          }
+        },
+        {
+          "name": "update_user_online_status",
+          "description": "Update user online status",
+          "endpoint": "POST /api/v5/p2p/user/update-online-status",
+          "parameters": {
+            "body": {
+              "onlineStatus": "number"
+            }
+          },
+          "required": ["onlineStatus"]
+        },
+        {
+          "name": "update_ad",
+          "description": "Update advertisement details",
+          "endpoint": "POST /api/v5/p2p/ad/update",
+          "parameters": {
+            "body": {
+              "adId": "string",
+              "amount": "string",
+              "maxOrderLimit": "string",
+              "minOrderLimit": "string",
+              "price": "string",
+              "isPublic": "boolean",
+              "message": "string",
+              "paymentMethodIds": ["string"]
+            }
+          },
+          "required": ["adId"]
+        },
+        {
+          "name": "update_ad_active_status",
+          "description": "Toggle ad active/paused status",
+          "endpoint": "POST /api/v5/p2p/ad/update-active-status",
+          "parameters": {
+            "body": {
+              "adId": "string",
+              "activeStatus": "boolean"
+            }
+          },
+          "required": ["adId", "activeStatus"]
+        },
+        {
+          "name": "get_chat_history",
+          "description": "Get chat history for an order",
+          "endpoint": "GET /api/v5/p2p/chat/history",
+          "parameters": {
+            "query": {
+              "orderId": "string",
+              "pageSize": "number",
+              "lastMessageSequence": "string"
+            }
+          },
+          "required": ["orderId"]
+        },
+        {
+          "name": "upload_file",
+          "description": "Upload files for verification",
+          "endpoint": "POST /api/v5/p2p/file/upload",
+          "parameters": {
+            "body": {
+              "file": "file",
+              "fileType": "string"
+            }
+          },
+          "required": ["file"]
+        },
+        {
+          "name": "create_dispute",
+          "description": "Create dispute for an order",
+          "endpoint": "POST /api/v5/p2p/dispute/create",
+          "parameters": {
+            "body": {
+              "orderId": "string",
+              "disputeType": "number",
+              "reason": "string"
+            }
+          },
+          "required": ["orderId", "disputeType", "reason"]
+        },
+        {
+          "name": "cancel_dispute",
+          "description": "Cancel an existing dispute",
+          "endpoint": "POST /api/v5/p2p/dispute/cancel",
+          "parameters": {
+            "body": {
+              "disputeId": "string"
+            }
+          },
+          "required": ["disputeId"]
+        },
+        {
+          "name": "send_dispute_message",
+          "description": "Send message in dispute chat",
+          "endpoint": "POST /api/v5/p2p/dispute/sendMessage",
+          "parameters": {
+            "body": {
+              "disputeId": "string",
+              "content": "string",
+              "contentType": "number"
+            }
+          },
+          "required": ["disputeId", "content", "contentType"]
+        },
+        {
+          "name": "get_dispute_details",
+          "description": "Get dispute details",
+          "endpoint": "GET /api/v5/p2p/dispute/dispute-details",
+          "parameters": {
+            "query": {
+              "disputeId": "string"
+            }
+          },
+          "required": ["disputeId"]
+        },
+        {
+          "name": "get_dispute_types",
+          "description": "Get available dispute types",
+          "endpoint": "GET /api/v5/p2p/dispute/types",
+          "parameters": {
+            "query": {}
+          }
+        },
+        {
+          "name": "get_payment_methods",
+          "description": "Get supported payment methods",
+          "endpoint": "GET /api/v5/p2p/payment-method/supported-list",
+          "parameters": {
+            "query": {
+              "cryptoCurrency": "string",
+              "fiatCurrency": "string"
+            }
+          },
+          "required": ["cryptoCurrency", "fiatCurrency"]
+        },
+        {
+          "name": "get_payment_methods_list",
+          "description": "Get payment methods list",
+          "endpoint": "GET /api/v5/p2p/payment-method/list",
+          "parameters": {
+            "query": {
+              "pageSize": "number",
+              "pageNum": "number"
+            }
+          }
+        },
+        {
+          "name": "update_payment_method",
+          "description": "Update payment method details",
+          "endpoint": "POST /api/v5/p2p/payment-method/update",
+          "parameters": {
+            "body": {
+              "paymentMethodId": "string",
+              "accountNo": "string",
+              "accountName": "string",
+              "bankName": "string",
+              "bankBranch": "string",
+              "bankAddress": "string",
+              "bankPhone": "string",
+              "swiftCode": "string",
+              "isDefault": "boolean"
+            }
+          },
+          "required": ["paymentMethodId"]
+        },
+        {
+          "name": "add_payment_method",
+          "description": "Add new payment method",
+          "endpoint": "POST /api/v5/p2p/payment-method/add",
+          "parameters": {
+            "body": {
+              "paymentMethodId": "string",
+              "accountNo": "string",
+              "accountName": "string",
+              "bankName": "string",
+              "bankBranch": "string",
+              "bankAddress": "string",
+              "bankPhone": "string",
+              "swiftCode": "string",
+              "isDefault": "boolean"
+            }
+          },
+          "required": ["paymentMethodId", "accountNo", "accountName", "bankName"]
+        },
+        {
+          "name": "delete_payment_method",
+          "description": "Delete payment method",
+          "endpoint": "POST /api/v5/p2p/payment-method/delete",
+          "parameters": {
+            "body": {
+              "paymentMethodId": "string"
+            }
+          },
+          "required": ["paymentMethodId"]
+        },
+        {
+          "name": "update_payment_method_status",
+          "description": "Update payment method status",
+          "endpoint": "POST /api/v5/p2p/payment-method/update-status",
+          "parameters": {
+            "body": {
+              "paymentMethodId": "string",
+              "status": "string"
+            }
+          },
+          "required": ["paymentMethodId", "status"]
+        },
+        {
+          "name": "get_merchant_ads",
+          "description": "Get merchant advertisements",
+          "endpoint": "GET /api/v5/p2p/merchant/ads",
+          "parameters": {
+            "query": {
+              "pageSize": "number",
+              "pageNum": "number"
+            }
+          }
+        },
+        {
+          "name": "get_merchant_basic_info",
+          "description": "Get merchant basic information",
+          "endpoint": "GET /api/v5/p2p/merchant/basic-info",
+          "parameters": {
+            "query": {
+              "userId": "string"
+            }
+          },
+          "required": ["userId"]
+        },
+        {
+          "name": "update_merchant_basic_info",
+          "description": "Update merchant basic information",
+          "endpoint": "POST /api/v5/p2p/merchant/update-basic-info",
+          "parameters": {
+            "body": {
+              "userId": "string",
+              "realName": "string",
+              "nationality": "string",
+              "birthday": "string",
+              "idCardNumber": "string"
+            }
+          },
+          "required": ["userId"]
+        },
+        {
+          "name": "get_merchant_followings",
+          "description": "Get merchant followings",
+          "endpoint": "GET /api/v5/p2p/merchant/followings",
+          "parameters": {
+            "query": {
+              "pageSize": "number",
+              "pageNum": "number"
+            }
+          }
+        },
+        {
+          "name": "update_merchant_following_status",
+          "description": "Update merchant following status",
+          "endpoint": "POST /api/v5/p2p/merchant/update-following-status",
+          "parameters": {
+            "body": {
+              "userId": "string",
+              "followUserId": "string",
+              "status": "string"
+            }
+          },
+          "required": ["userId", "followUserId", "status"]
+        },
+        {
+          "name": "get_config",
+          "description": "Get system configuration",
+          "endpoint": "GET /api/v5/p2p/config",
+          "parameters": {
+            "query": {
+              "key": "string"
+            }
+          }
+        },
+        {
+          "name": "cancel_order",
+          "description": "Cancel P2P order",
+          "endpoint": "POST /api/v5/p2p/order/cancel",
+          "parameters": {
+            "body": {
+              "orderId": "string",
+              "cancelReason": "string"
+            }
+          },
+          "required": ["orderId", "cancelReason"]
+        },
+        {
+          "name": "get_order_unreleased",
+          "description": "Get unreleased orders",
+          "endpoint": "GET /api/v5/p2p/order/unreleased-orders",
+          "parameters": {
+            "query": {
+              "pageSize": "number",
+              "pageNum": "number"
+            }
+          }
+        },
+        {
+          "name": "get_pending_order",
+          "description": "Get pending order",
+          "endpoint": "GET /api/v5/p2p/order/pending-order",
+          "parameters": {
+            "query": {
+              "orderId": "string"
+            }
+          },
+          "required": ["orderId"]
+        },
+        {
+          "name": "get_trade_info",
+          "description": "Get trade information",
+          "endpoint": "GET /api/v5/p2p/order/trade-info",
+          "parameters": {
+            "query": {
+              "orderId": "string"
+            }
+          },
+          "required": ["orderId"]
+        },
+        {
+          "name": "get_counterparty_user_info",
+          "description": "Get counterparty user information",
+          "endpoint": "GET /api/v5/p2p/order/counterparty-user-info",
+          "parameters": {
+            "query": {
+              "orderId": "string"
+            }
+          },
+          "required": ["orderId"]
+        },
+        {
+          "name": "get_order_cancel_reasons",
+          "description": "Get order cancellation reasons",
+          "endpoint": "GET /api/v5/p2p/order/cancel-reason-list",
+          "parameters": {
+            "query": {}
+          }
+        },
+        {
+          "name": "send_counterparty_message",
+          "description": "Send message to counterparty (alternative endpoint)",
+          "endpoint": "POST /api/v5/p2p/order/counterparty-user-list",
+          "parameters": {
+            "body": {
+              "orderId": "string",
+              "content": "string",
+              "contentType": "number"
+            }
+          },
+          "required": ["orderId", "content", "contentType"]
+        },
+        {
+          "name": "mark_order_as_unpaid",
+          "description": "Mark order as unpaid",
+          "endpoint": "POST /api/v5/p2p/order/mark-as-unpaid",
+          "parameters": {
+            "body": {
+              "orderId": "string",
+              "unpaidReason": "string"
+            }
+          },
+          "required": ["orderId", "unpaidReason"]
+        },
+        {
+          "name": "get_currency_pair_list",
+          "description": "Get currency pair list",
+          "endpoint": "GET /api/v5/p2p/currency/currency-pair-list",
+          "parameters": {
+            "query": {
+              "pageSize": "number",
+              "pageNum": "number"
+            }
+          }
+        },
+        {
+          "name": "get_fiat_currency_list",
+          "description": "Get fiat currency list",
+          "endpoint": "GET /api/v5/p2p/currency/fiat-currency-list",
+          "parameters": {
+            "query": {
+              "pageSize": "number",
+              "pageNum": "number"
+            }
+          }
+        },
+        {
+          "name": "get_platform_ticker",
+          "description": "Get platform ticker",
+          "endpoint": "GET /api/v5/p2p/p2p-ticker/platform-ticker",
+          "parameters": {
+            "query": {
+              "cryptoCurrency": "string",
+              "fiatCurrency": "string"
+            }
+          },
+          "required": ["cryptoCurrency", "fiatCurrency"]
+        },
+        {
+          "name": "get_all_ticker",
+          "description": "Get all P2P tickers",
+          "endpoint": "GET /api/v5/p2p/p2p-ticker/all",
+          "parameters": {
+            "query": {
+              "pageSize": "number",
+              "pageNum": "number"
+            }
+          }
+        },
+        {
+          "name": "get_estimated_price",
+          "description": "Get estimated price",
+          "endpoint": "GET /api/v5/p2p/p2p-ticker/estimated-price",
+          "parameters": {
+            "query": {
+              "cryptoCurrency": "string",
+              "fiatCurrency": "string",
+              "amount": "string"
+            }
+          },
+          "required": ["cryptoCurrency", "fiatCurrency", "amount"]
+        },
+        {
+          "name": "get_ad_active_list",
+          "description": "Get active advertisement list",
+          "endpoint": "GET /api/v5/p2p/ad/active-list",
+          "parameters": {
+            "query": {
+              "cryptoCurrency": "string",
+              "fiatCurrency": "string",
+              "pageSize": "number",
+              "pageNum": "number"
+            }
+          },
+          "required": ["cryptoCurrency", "fiatCurrency"]
+        },
+        {
+          "name": "get_marketplace_list",
+          "description": "Get marketplace advertisement list",
+          "endpoint": "GET /api/v5/p2p/ad/marketplace-list",
+          "parameters": {
+            "query": {
+              "cryptoCurrency": "string",
+              "fiatCurrency": "string",
+              "pageSize": "number",
+              "pageNum": "number"
+            }
+          },
+          "required": ["cryptoCurrency", "fiatCurrency"]
+        },
+        {
+          "name": "get_optimal_price",
+          "description": "Get optimal price for advertisement",
+          "endpoint": "GET /api/v5/p2p/ad/optimal-price",
+          "parameters": {
+            "query": {
+              "cryptoCurrency": "string",
+              "fiatCurrency": "string",
+              "amount": "string"
+            }
+          },
+          "required": ["cryptoCurrency", "fiatCurrency", "amount"]
+        },
+        {
+          "name": "get_share_info",
+          "description": "Get advertisement/share information",
+          "endpoint": "GET /api/v5/p2p/ad/share-info",
+          "parameters": {
+            "query": {
+              "adId": "string"
+            }
+          },
+          "required": ["adId"]
+        },
+        {
+          "name": "get_merchant_share_info",
+          "description": "Get merchant/share information",
+          "endpoint": "GET /api/v5/p2p/merchant/share-info",
+          "parameters": {
+            "query": {
+              "userId": "string"
+            }
+          },
+          "required": ["userId"]
+        },
+        {
+          "name": "get_merchant_share_profile",
+          "description": "Get merchant/share profile",
+          "endpoint": "GET /api/v5/p2p/merchant/share-profile",
+          "parameters": {
+            "query": {
+              "userId": "string"
+            }
+          },
+          "required": ["userId"]
+        },
+        {
+          "name": "get_balance",
+          "description": "Get user balance",
+          "endpoint": "GET /api/v5/p2p/user/balance",
+          "parameters": {
+            "query": {
+              "currency": "string"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
